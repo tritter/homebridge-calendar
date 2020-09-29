@@ -14,10 +14,10 @@ class CalendarActionBuilder {
       this._endOffset = '-0s';
     } else if (offset.startsWith('+') === false) {
       this._startOffset = '-0s';
-      this._endOffset = offset;
+      this._endOffset = `+${offset}`;
     } else {
       this._startOffset = '-0s';
-      this._endOffset = '-0s';
+      this._endOffset = `+${offset}`;
     }
 
     if (moment().isRelativeTimeFormat(this._startOffset) === false) {
