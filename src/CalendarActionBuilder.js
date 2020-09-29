@@ -5,15 +5,25 @@ const moment = require('./moment');
 class CalendarActionBuilder {
 
   constructor(offset) {
+
     if (offset === undefined) {
       this._startOffset = '-0s';
+      this._endOffset = '-0s';
     } else if (offset.startsWith('-') === false) {
       this._startOffset = `-${offset}`;
+      this._endOffset = '-0s';
+    } else if (offset.startsWith('+') === false) {
+      this._startOffset = '-0s';
+      this._endOffset = offset;
     } else {
-      this._startOffset = offset;
+      this._startOffset = '-0s';
+      this._endOffset = '-0s';
     }
 
     if (moment().isRelativeTimeFormat(this._startOffset) === false) {
+      throw new Error('Invalid relative time format.');
+    }
+    if (moment().isRelativeTimeFormat(this._endOffset) === false) {
       throw new Error('Invalid relative time format.');
     }
   }
@@ -33,7 +43,7 @@ class CalendarActionBuilder {
 
     const events = [].concat(cal.events.map(e => ({
       date: moment(e.startDate.toJSDate()).relativeTime(this._startOffset).toDate(),
-      expires: e.endDate.toJSDate(),
+      expires: moment(e.endDate.toJSDate()).relativeTime(this._endOffset).toDate(),
       state: true,
       summary: e.summary
     })),
@@ -51,7 +61,7 @@ class CalendarActionBuilder {
 
     const events = [].concat(cal.occurrences.map(e => ({
       date: moment(e.startDate.toJSDate()).relativeTime(this._startOffset).toDate(),
-      expires: e.endDate.toJSDate(),
+      expires: moment(e.endDate.toJSDate()).relativeTime(this._endOffset).toDate(),
       state: true,
       summary: e.item.summary
     })),
