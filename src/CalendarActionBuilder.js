@@ -9,10 +9,10 @@ class CalendarActionBuilder {
     if (offset === undefined) {
       this._startOffset = '-0s';
       this._endOffset = '-0s';
-    } else if (offset.startsWith('-') === false) {
+    } else if (offset.startsWith('-') === true) {
       this._startOffset = `-${offset}`;
       this._endOffset = '-0s';
-    } else if (offset.startsWith('+') === false) {
+    } else if (offset.startsWith('+') === true) {
       this._startOffset = '-0s';
       this._endOffset = `+${offset}`;
     } else {
