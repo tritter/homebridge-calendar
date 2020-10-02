@@ -8,22 +8,13 @@ class CalendarActionBuilder {
 
     if (offset === undefined) {
       this._startOffset = '-0s';
-      this._endOffset = '-0s';
     } else if (offset.startsWith('-') === true) {
       this._startOffset = `-${offset}`;
-      this._endOffset = '-0s';
-    } else if (offset.startsWith('+') === true) {
-      this._startOffset = `+${offset}`;
-      this._endOffset = `+${offset}`;
     } else {
-      this._startOffset = `+${offset}`;
-      this._endOffset = `+${offset}`;
+      this._startOffset = offset;
     }
 
     if (moment().isRelativeTimeFormat(this._startOffset) === false) {
-      throw new Error('Invalid relative time format.');
-    }
-    if (moment().isRelativeTimeFormat(this._endOffset) === false) {
       throw new Error('Invalid relative time format.');
     }
   }
@@ -42,8 +33,8 @@ class CalendarActionBuilder {
   _generateNonRecurringEvents(cal) {
 
     const events = [].concat(cal.events.map(e => ({
-      date: moment(e.startDate.toJSDate()).relativeTime(this._startOffset).toDate(),
-      expires: moment(e.endDate.toJSDate()).relativeTime(this._endOffset).toDate(),
+      date: e.summary === "Nacht" ? moment(e.endDate.toJSDate()).relativeTime('+8h').toDate() : moment(e.startDate.toJSDate()).relativeTime(this._startOffset).toDate(),
+      expires: e.summary === "Nacht" ? moment(e.endDate.toJSDate()).relativeTime('+16h').toDate() : e.endDate.toJSDate(),
       state: true,
       summary: e.summary
     })),
@@ -61,7 +52,7 @@ class CalendarActionBuilder {
 
     const events = [].concat(cal.occurrences.map(e => ({
       date: moment(e.startDate.toJSDate()).relativeTime(this._startOffset).toDate(),
-      expires: moment(e.endDate.toJSDate()).relativeTime(this._endOffset).toDate(),
+      expires: e.endDate.toJSDate(),
       state: true,
       summary: e.item.summary
     })),
