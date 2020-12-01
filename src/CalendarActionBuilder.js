@@ -33,8 +33,8 @@ class CalendarActionBuilder {
   _generateNonRecurringEvents(cal) {
 
     const events = [].concat(cal.events.map(e => ({
-      date: e.summary === "Nacht" ? moment(e.endDate.toJSDate()).relativeTime('+8h').toDate() : moment(e.startDate.toJSDate()).relativeTime(this._startOffset).toDate(),
-      expires: e.summary === "Nacht" ? moment(e.endDate.toJSDate()).relativeTime('+16h').toDate() : e.endDate.toJSDate(),
+      date: e.summary.startsWith("Nacht") ? moment(e.endDate.toJSDate()).relativeTime('+8h').toDate() : moment(e.startDate.toJSDate()).relativeTime(this._startOffset).toDate(),
+      expires: e.summary.startsWith("Nacht") ? moment(e.endDate.toJSDate()).relativeTime('+16h').toDate() : e.endDate.toJSDate(),
       state: true,
       summary: e.summary
     })),
